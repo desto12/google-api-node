@@ -1,7 +1,13 @@
 const express = require('express');
 const uploadFileToGoogleDrive = require('./upload');
 const multer = require('multer');
+const fs = require('fs');
 
+const dir = './upload';
+
+if (!fs.existsSync(dir)){
+  fs.mkdirSync(dir);
+}
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
