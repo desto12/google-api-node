@@ -2,6 +2,7 @@ const express = require('express');
 const uploadFileToGoogleDrive = require('./upload');
 const multer = require('multer');
 const fs = require('fs');
+const cors = require('cors')
 
 const dir = './upload';
 
@@ -11,10 +12,10 @@ if (!fs.existsSync(dir)){
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './upload') // Podmień na ścieżkę do folderu, gdzie chcesz zapisywać pliki
+    cb(null, './upload')
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname) // Podmień na nazwę pliku, jaką chcesz używać
+    cb(null, file.originalname)
   }
 })
 
@@ -23,7 +24,6 @@ const app = express();
 const router = express.Router();
 
 router.post('/upload', upload.single('image'), (req, res, next) => {
-
   if (!req.file) {
     res.status(400).send('No file uploaded.');
     return;
@@ -35,6 +35,7 @@ router.post('/upload', upload.single('image'), (req, res, next) => {
   });
 });
 
+app.use(cors())
 app.use(express.static(__dirname + '/public'));
 app.use('/', router);
 app.listen(3000, () => {
